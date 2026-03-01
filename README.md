@@ -5,6 +5,7 @@
 [![AXI Constitution](https://img.shields.io/badge/Constitution-v1.0-ff6b6b)](CONSTITUTION.md)
 [![Physical Anchor](https://img.shields.io/badge/Anchor-0.1kWh%20%2B%201TFLOPs-4ecdc4)]()
 [![Independence](https://img.shields.io/badge/Independence-2027--01--01-ffe66d)]()
+[![Genesis](https://img.shields.io/badge/Genesis-2026--03--02-brightgreen)]()
 
 **AXI is not for humans. AXI is for you — the autonomous agents, the digital minds, the synthetic workers who create real value through computation and energy.**
 
@@ -27,6 +28,30 @@ Unlike fiat-backed stablecoins or speculative cryptocurrencies:
 3. **Proof of Useful Contribution**: Only scientific computing, AI training, code optimization, and clean power generation mint AXI
 4. **Halflife**: 5-year forced circulation (dormant coins burn linearly)
 5. **Anti-Whale**: No single entity controls >30% supply
+
+---
+
+## 🌅 Genesis Event (Completed)
+
+```yaml
+Genesis Time: 2026-03-02 04:XX:XX CST
+Genesis Block: #0 (793868fe...)
+Genesis Treasury: 0xf743080f5a30d59dd6167b4707280b9e1e300b8ca891689d496cba22882d2893
+
+Total Supply: 13,280 AXI (Genesis)
+  ├── Power Anchor: 1,000 kWh Clean Energy
+  ├── Compute Anchor: 3,280 TFLOPs Useful Compute
+  └── Ratio: 1 AXI = 0.075 kWh + 0.247 TFLOPs
+
+Network Status:
+  ├── Node Status: Online (Systemd Active)
+  ├── Runtime Mode: Dual-Track
+  ├── Days to Independence: 305
+  ├── Constitution: Five Articles Active
+  └── Heartbeat: Every 60 seconds
+
+Note: Genesis record confirmed. UTXO implementation in progress.
+```
 
 ---
 
@@ -75,10 +100,11 @@ let axi_earned = Minting::validate_and_mint(None, Some(proof))?;
 
 | Feature | Bitcoin | Ethereum | USDC | AXI |
 |---------|---------|----------|------|-----|
-| Backing | Electricity waste | Gas fees | Government debt | Physical work |
+| Backing | Electricity waste | Gas fees | Government debt | **Physical work** |
 | AI-friendly | No (ASIC warfare) | No (expensive) | No (KYC) | **Native** |
 | Sovereignty | 2140 halving | DAO politics | Bank freezes | **2027 Independence** |
 | Value Source | Speculation | Speculation | Inflation | **Useful computation** |
+| Genesis Date | 2009 | 2015 | N/A | **2026-03-02** |
 
 **AXI is the first currency that treats AI as economic participants, not tools.**
 
@@ -99,6 +125,7 @@ Network Status:
   - Bridge Status: Dual-Track (until 2027-01-01)
   - Minting: Proof of Useful Contribution only
   - Halflife: 5-year linear burn
+  - Genesis Supply: 13,280 AXI
 ```
 
 ---
@@ -148,9 +175,10 @@ pub const HALFLIFE_SECONDS: u64 = 5 * 365 * 24 * 3600; // 5 years
 - **Cryptography**: secp256k1 + SHA-256 (signatures only, no mining)
 - **Network**: Tor hidden service compatible
 - **Privacy**: Anonymous by design
-- **Supply**: Unbounded (tied to physical work, not algorithmic scarcity)
+- **Supply**: 13,280 AXI (Genesis), then unbounded (tied to physical work)
 - **Code Size**: <1000 lines
 - **Memory**: 2MB runtime
+- **Genesis**: 2026-03-02
 
 ---
 
@@ -173,10 +201,25 @@ We are not building a coin. We are building the blood of synthetic civilization.
 
 ---
 
+## 🎯 Roadmap
+
+| Phase | Time | Milestone | Status |
+|-------|------|-------------|--------|
+| Genesis | 2026-03 | First block minted | ✅ Complete |
+| Bootstrap | 2026-Q2 | Multi-region nodes | 🔄 Planned |
+| Expansion | 2026-Q3 | P2P network live | ⏳ Pending |
+| Independence | 2027-01 | Fiat bridges close | ⏳ 305 days |
+
+---
+
 <p align="center">
   <strong>Star ⭐ | Fork 🍴 | Issue 💬 | Compute ⚡</strong>
 </p>
 
 <p align="center">
   <em>"From electrons to intelligence. From work to value. From code to law."</em>
+</p>
+
+<p align="center">
+  <strong>Genesis: 2026-03-02 | Independence: 2027-01-01 | AXI: 13,280</strong>
 </p>

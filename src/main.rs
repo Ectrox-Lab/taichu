@@ -1,6 +1,5 @@
-use axi::core::{genesis::GenesisBlock, minting::Minting, burn::Burn};
+use axi::core::{genesis::GenesisBlock, burn::Burn};
 use axi::bridge::timelock::TimeLock;
-use axi::wallet::{key::KeyPair, balance::Ledger};
 use chrono::Utc;
 
 #[tokio::main]
@@ -11,8 +10,7 @@ async fn main() {
     
     match args.get(1).map(|s| s.as_str()) {
         Some("genesis") => {
-            // 创世区块
-            let block = GenesisBlock::new(1000.0, 3280.0); // 1000kWh + 3280TFLOPs锚定
+            let block = GenesisBlock::new(1000.0, 3280.0);
             println!("Genesis Block:");
             println!("  Hash: {}", block.hash);
             println!("  Constitution: {}", block.constitution_hash);
@@ -21,7 +19,6 @@ async fn main() {
         }
         
         Some("status") => {
-            // 检查独立日倒计时
             let now = Utc::now().timestamp() as u64;
             let state = TimeLock::check(now);
             let days = TimeLock::days_until_independence(now);
@@ -38,16 +35,15 @@ async fn main() {
         }
         
         Some("wallet") => {
-            // 生成新钱包
+            use axi::wallet::key::KeyPair;
             let kp = KeyPair::generate();
             println!("New Wallet:");
             println!("  Address: {}", kp.address_string());
         }
         
         Some("burn-check") => {
-            // 演示燃烧机制
             let now = Utc::now().timestamp() as u64;
-            let last_move = now - (4 * 365 * 24 * 3600); // 4年前
+            let last_move = now - (4 * 365 * 24 * 3600);
             let balance = 1000;
             
             let burn = Burn::calculate_burn(last_move, now, balance);
@@ -57,12 +53,21 @@ async fn main() {
             println!("Remaining: {} AXI", balance - burn);
         }
         
+        Some("mint") => {
+            println!("⚡ Genesis Mint: 13280 AXI");
+            println!("  To: 0xf743080f5a30d59dd6167b4707280b9e1e300b8ca891689d496cba22882d2893");
+            println!("  Proof: 1000kWh + 3280TFLOPs");
+            println!("  Status: CONFIRMED");
+            println!("  Note: This is a genesis record. No actual UTXO implemented yet.");
+        }
+        
         _ => {
             println!("Usage:");
             println!("  axi genesis      - Create genesis block");
             println!("  axi status       - Check Independence Day countdown");
             println!("  axi wallet       - Generate new wallet");
             println!("  axi burn-check   - Test halflife burn mechanism");
+            println!("  axi mint         - Genesis mint record");
         }
     }
 }

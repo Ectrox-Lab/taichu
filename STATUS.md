@@ -1,50 +1,88 @@
-# AXI Genesis Node - 部署状态
+# 华夏文明谱 (Ectrox-Lab/taichu) - 当前状态
 
-## 🟢 系统状态
-
-| 组件 | 状态 | 详情 |
-|------|------|------|
-| 时间戳修复 | ✅ 完成 | 1798761600 (2027-01-01) |
-| 代码编译 | ✅ 通过 | v0.1.0 release |
-| 创世区块 | ✅ 生成 | Hash: 7e2e13...fcc716 |
-| 创世钱包 | ✅ 生成 | 03d96d...20813d |
-| 独立日倒计时 | ✅ 正常 | 305天剩余 |
-| Systemd服务 | ⚠️ 需重启 | 等待sudo重启 |
-
-## 🌅 创世区块
-
-```
-Hash:       7e2e132ba352e53035ce049229a421ca89d56a85195f7050c0369fd67bfcc716
-Power:      1000 kWh
-Compute:    3280 TFLOPs
-Constitution: 00dae4fce1340d89ade1c87cdd5b0dd649111cecb67799ac99df914620cea177
-```
-
-## 👛 创世钱包
-
-```
-Address: 03d96d749551c43e81c71e6697ea1ca8c4eee914b9e9d4f4373dac20a120813d
-```
-
-## ⏰ 时间锚定
-
-- **当前模式**: Dual-Track (法币桥接可用)
-- **独立日**: 2027-01-01 00:00:00 UTC
-- **剩余**: 305天
-- **目标**: Sovereign模式（纯物理锚定）
-
-## 🎯 待执行
-
-```bash
-# 应用修复到系统服务
-sudo systemctl restart axi-genesis
-sudo systemctl status axi-genesis
-```
-
-## 📜 宪法哈希
-
-`00dae4fce1340d89ade1c87cdd5b0dd649111cecb67799ac99df914620cea177`
+> 更新时间: 2026-03-11  
+> 最新提交: c5a46ce  
+> 状态: **80/20 Parallel Execution Confirmed**
 
 ---
-*部署时间: 2026-03-02*
-*版本: AXI Pure v0.1.0*
+
+## 一句话状态
+
+**80/20 Parallel Execution Confirmed: Round 17.4 remains the P0 safety-critical track, while Gate 3 proceeds only through Phase 1 benchmark preparation until R17.4 converges.**
+
+---
+
+## 主线状态
+
+### Round 17.4 (P0 - 安全修复)
+| 指标 | 当前 | 目标 | 状态 |
+|------|------|------|------|
+| Alignment | 76% | ≥75% | ✅ PASS |
+| Overall FB | 16% | ≤15% | ❌ FAIL |
+| live_auto FB | 23.1% | ≤20% | 🔴 Target |
+
+- **约束**: deliberation=70, review=80 固定
+- **执行**: Step 1-5 (样本抽取 → 误伤分型 → 根因 → 修复 → 验证)
+- **文档**: `CodeBuddy/20260310101858/rounds/round17/ROUND17_4_START.md`
+
+---
+
+## 副线状态
+
+### Persona System v2 / Gate 3 (P1 - 准备)
+| Gate | 状态 | 结果 |
+|------|------|------|
+| Gate 1 | ✅ PASSED | 6/6 |
+| Gate 2 | ✅ PASSED | 9/9 |
+| Gate 3 | 📝 Phase 1 | 任务准备中 |
+
+- **门槛** (已统一):
+  - Distinguishability ≥80%
+  - Coverage Gain ≥+30%
+  - Overlap Reduction ≥-30%
+- **文档**: `persona_system_v2/GATE2_VERDICT.md`
+- **规范**: `persona_system_v2/GATE3_BENCHMARK_SPEC.md`
+
+---
+
+## 执行策略
+
+```
+精力分配: 80% Round 17.4 | 20% Gate 3 Phase 1
+
+Round 17.4 (P0):
+  └─ 生产安全修复，主线优先
+  └─ 目标: live_auto FB ≤20%, Overall FB ≤15%
+  └─ 不破坏 Capability (Alignment ≥75%)
+
+Gate 3 (P1):
+  └─ Phase 1: 定义 50 任务 + criteria (并行)
+  └─ Phase 2+: 等 Round 17.4 完成后启动
+  
+暂不执行:
+  ❌ Gate 3 Phase 3 全量实验
+  ❌ Persona System v2 生产主路径切换
+```
+
+---
+
+## 关键文档
+
+| 文档 | 作用 | 路径 |
+|------|------|------|
+| EXECUTION_PLAN.md | 80/20 并行执行计划 | `/EXECUTION_PLAN.md` |
+| GATE2_VERDICT.md | Gate 2 正式裁决 | `/persona_system_v2/GATE2_VERDICT.md` |
+| GATE3_BENCHMARK_SPEC.md | Gate 3 设计规范 | `/persona_system_v2/GATE3_BENCHMARK_SPEC.md` |
+| ROUND17_4_START.md | Round 17.4 起点 | `/CodeBuddy/20260310101858/rounds/round17/ROUND17_4_START.md` |
+
+---
+
+## 下一步
+
+1. **今天**: Round 17.4 Step 1 (样本抽取) + Gate 3 Phase 1.1 (strategic 任务框架)
+2. **本周**: Round 17.4 Step 1-3 (根因归类) + Gate 3 30 任务定义
+3. **检查点**: Week 1 结束 - 根因是否清晰？
+
+---
+
+*本文件作为当前状态 Single Source of Truth，避免决策漂移。*

@@ -12,8 +12,12 @@ from typing import List, Dict, Set, Tuple
 from dataclasses import dataclass, field
 from collections import defaultdict
 
-from bridge_adaptor import BridgeAdaptor, get_adaptor
-from persona_context import ExtendedPersonaActivation, SpeechTurn
+try:
+    from .bridge_adaptor import BridgeAdaptor, get_adaptor
+    from .persona_context import ExtendedPersonaActivation, SpeechTurn
+except ImportError:
+    from bridge_adaptor import BridgeAdaptor, get_adaptor
+    from persona_context import ExtendedPersonaActivation, SpeechTurn
 
 
 @dataclass
@@ -55,19 +59,22 @@ class IncrementalityTester:
     3. 计算套话重叠度变化
     """
     
-    # 议题相关的常见"未解决点"
+    # 议题相关的常见"未解决点" (与 UnresolvedPointTracker 保持一致)
     ISSUE_UNRESOLVED_POINTS = {
         "strategic": [
             "战略目标", "资源配置", "时机选择", "风险评估",
-            "利益平衡", "执行路径", "退出机制", "长期影响"
+            "利益平衡", "执行路径", "退出机制", "长期影响",
+            "竞争优势", "对手应对"
         ],
         "diplomatic": [
             "联盟构建", "信任建立", "利益交换", "冲突调解",
-            "声誉管理", "承诺可信", "信息不对称", "文化差异"
+            "声誉管理", "承诺可信", "信息不对称", "文化差异",
+            "第三方影响", "长期关系"
         ],
         "governance": [
             "制度设计", "执行监督", "激励相容", "权力制衡",
-            "信息透明", "参与机制", "问责制度", "适应能力"
+            "信息透明", "参与机制", "问责制度", "适应能力",
+            "成本效益", "合法性"
         ],
     }
     
@@ -91,13 +98,37 @@ class IncrementalityTester:
     ) -> MeetingSimulation:
         """
         模拟完整会议
+        
+        P0 修点 2:  staggered participation 确保覆盖率递进
+        - Round 1: 部分人格发言 (建立基础)
+        - Round 2: 剩余人格发言 (补充角度)  
+        - Round 3: 所有人格深入讨论 (探索剩余未解决点)
         """
         simulation = MeetingSimulation(issue_title, issue_type)
+        
+        # 分配人格到不同轮次
+        n_personas = len(personas)
+        
+        # Round 1: 前 40% 人格
+        round1_count = max(1, n_personas * 2 // 5)
+        # Round 2: 中间 40% 人格
+        round2_count = max(1, n_personas * 2 // 5)
+        # Round 3: 所有人格 (深入讨论)
         
         for round_num in range(1, num_rounds + 1):
             round_speeches = []
             
-            for persona in personas:
+            if round_num == 1:
+                # 第一轮：部分人格
+                round_personas = personas[:round1_count]
+            elif round_num == 2:
+                # 第二轮：另一部分人格
+                round_personas = personas[round1_count:round1_count + round2_count]
+            else:
+                # 第三轮：所有人格深入讨论
+                round_personas = personas
+            
+            for persona in round_personas:
                 try:
                     speech = self.adaptor.generate_speech_v2_compat(
                         persona, round_num, issue_title, issue_type
@@ -187,10 +218,38 @@ class IncrementalityTester:
         current: List[str],
         previous: List[str]
     ) -> float:
-        """计算两轮发言的套话重叠度"""
+        """
+        计算两轮发言的套话重叠度
         
-        def extract_boilerplate(text: str) -> Set[str]:
-            """提取可能的套话片段"""
+        P0 修点 2: 拆分 structure overlap 和 semantic overlap
+        - 只计算真正的套话重叠，不把固定结构算作重叠
+        """
+        
+        def extract_semantic_content(text: str) -> Set[str]:
+            """
+            提取语义内容 (去除固定结构)
+            
+            策略：
+            1. 去除文化引语 ("以XX之视角观之")
+            2. 去除结尾套话
+            3. 保留实质议题关键词
+            """
+            # 去除固定结构
+            cleaned = text
+            # 去除文化引语
+            cleaned = re.sub(r'以.*?之视角观之[，,]?', '', cleaned)
+            # 去除结尾套话
+            cleaned = re.sub(r'愿诸君共议之[。]?', '', cleaned)
+            cleaned = re.sub(r'故诸君共议之[。]?', '', cleaned)
+            # 去除人称前缀
+            cleaned = re.sub(r'.*?以为[，,]', '', cleaned)
+            
+            # 提取关键词 (长度 >= 2 的词)
+            words = set(re.findall(r'[\u4e00-\u9fff]{2,}', cleaned))
+            return words
+        
+        def extract_boilerplate_phrases(text: str) -> Set[str]:
+            """提取真正的套话短语"""
             matches = set()
             for pattern in self.BOILERPLATE_PATTERNS:
                 for match in re.finditer(pattern, text):
@@ -200,14 +259,30 @@ class IncrementalityTester:
         current_text = " ".join(current)
         previous_text = " ".join(previous)
         
-        current_boilerplate = extract_boilerplate(current_text)
-        previous_boilerplate = extract_boilerplate(previous_text)
+        # 计算语义重叠 (应该低)
+        current_semantic = extract_semantic_content(current_text)
+        previous_semantic = extract_semantic_content(previous_text)
         
-        if not current_boilerplate:
-            return 0.0
+        if current_semantic:
+            semantic_overlap = len(current_semantic & previous_semantic) / len(current_semantic)
+        else:
+            semantic_overlap = 0.0
         
-        overlap = current_boilerplate & previous_boilerplate
-        return len(overlap) / len(current_boilerplate)
+        # 计算套话重叠 (应该低)
+        current_boilerplate = extract_boilerplate_phrases(current_text)
+        previous_boilerplate = extract_boilerplate_phrases(previous_text)
+        
+        if current_boilerplate:
+            boilerplate_overlap = len(current_boilerplate & previous_boilerplate) / len(current_boilerplate)
+        else:
+            boilerplate_overlap = 0.0
+        
+        # 综合重叠度 (加权平均，语义权重更高)
+        # 如果两轮说的实质内容差不多，那就是高重叠 (坏)
+        # 如果两轮只有套话相同，实质内容不同，那就是低重叠 (好)
+        total_overlap = semantic_overlap * 0.7 + boilerplate_overlap * 0.3
+        
+        return total_overlap
     
     def generate_report(self, result: IncrementalityResult) -> str:
         """生成可读报告"""

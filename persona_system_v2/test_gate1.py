@@ -17,7 +17,8 @@ import os
 # 添加项目根目录到路径
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-from bridge import PersonaActivator, ExtendedPersonaActivation
+from bridge import PersonaActivator
+from persona_system_v2.persona_context import ExtendedPersonaActivation
 
 
 def test_import():

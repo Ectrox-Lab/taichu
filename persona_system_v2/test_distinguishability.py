@@ -11,8 +11,12 @@ from typing import List, Dict, Tuple
 from collections import defaultdict
 from dataclasses import dataclass
 
-from bridge_adaptor import BridgeAdaptor, get_adaptor
-from persona_context import ExtendedPersonaActivation, SpeechTurn
+try:
+    from .bridge_adaptor import BridgeAdaptor, get_adaptor
+    from .persona_context import ExtendedPersonaActivation, SpeechTurn
+except ImportError:
+    from bridge_adaptor import BridgeAdaptor, get_adaptor
+    from persona_context import ExtendedPersonaActivation, SpeechTurn
 
 
 @dataclass

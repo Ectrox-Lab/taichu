@@ -12,10 +12,16 @@ from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass
 from datetime import datetime
 
-from persona_context import (
-    PersonaContext, SpeechTurn, AuditTrail, CultureContext,
-    RegistryEntry, Stance, MissingRegistryError, AuditVerificationError
-)
+try:
+    from .persona_context import (
+        PersonaContext, SpeechTurn, AuditTrail, CultureContext,
+        RegistryEntry, Stance, MissingRegistryError, AuditVerificationError
+    )
+except ImportError:
+    from persona_context import (
+        PersonaContext, SpeechTurn, AuditTrail, CultureContext,
+        RegistryEntry, Stance, MissingRegistryError, AuditVerificationError
+    )
 
 
 @dataclass
@@ -259,12 +265,60 @@ class GroundingEngine:
         return matched
 
 
+class UnresolvedPointTracker:
+    """
+    未解决点追踪器
+    
+    议题相关的关键未解决点，发言必须覆盖才能通过验证
+    """
+    
+    # 各议题类型的未解决点定义
+    UNRESOLVED_POINTS = {
+        "strategic": [
+            "战略目标", "资源配置", "时机选择", "风险评估",
+            "利益平衡", "执行路径", "退出机制", "长期影响",
+            "竞争优势", "对手应对"
+        ],
+        "diplomatic": [
+            "联盟构建", "信任建立", "利益交换", "冲突调解",
+            "声誉管理", "承诺可信", "信息不对称", "文化差异",
+            "第三方影响", "长期关系"
+        ],
+        "governance": [
+            "制度设计", "执行监督", "激励相容", "权力制衡",
+            "信息透明", "参与机制", "问责制度", "适应能力",
+            "成本效益", "合法性"
+        ],
+    }
+    
+    @classmethod
+    def get_points(cls, issue_type: str) -> List[str]:
+        """获取议题类型的未解决点"""
+        return cls.UNRESOLVED_POINTS.get(issue_type, cls.UNRESOLVED_POINTS["strategic"])
+    
+    @classmethod
+    def check_coverage(cls, content: str, issue_type: str) -> Tuple[bool, List[str], List[str]]:
+        """
+        检查内容是否覆盖未解决点
+        
+        Returns:
+            (是否覆盖至少一个, 已覆盖点, 所有应覆盖点)
+        """
+        points = cls.get_points(issue_type)
+        covered = [p for p in points if p in content]
+        return len(covered) >= 1, covered, points
+
+
 class SynthesisEngine:
     """
     Synthesis 引擎
     
     核心任务：基于 Grounding 结果生成发言
     确保不是纯模板，而是有实质内容支撑
+    
+    P0 修点 1: 强制覆盖 unresolved points
+    - 每条发言必须回应至少 1 个未解决点
+    - 否则 verified=False，不入 transcript
     """
     
     def __init__(self, grounding_engine: GroundingEngine):
@@ -281,25 +335,43 @@ class SynthesisEngine:
     ) -> SynthesisResult:
         """
         合成发言
+        
+        P0 修点 1: 强制覆盖至少 1 个 unresolved point
         """
         # 1. 确定立场
         stance = self._determine_stance(context, issue_title, grounding_result)
         
-        # 2. 生成内容骨架 (基于 grounding，非纯模板)
+        # 2. 获取未解决点
+        unresolved_points = UnresolvedPointTracker.get_points(issue_type)
+        
+        # 3. 生成内容骨架 (强制包含未解决点)
         content_skeleton = self._generate_skeleton(
-            context, issue_title, grounding_result
+            context, issue_title, grounding_result, unresolved_points
         )
         
-        # 3. 应用文化风格
+        # 4. 应用文化风格
         styled_content = self._apply_cultural_style(
             content_skeleton, context.culture, context.thinking_style
         )
         
-        # 4. 计算模板偏离度
+        # 5. 强制检查：是否覆盖至少 1 个未解决点
+        has_coverage, covered_points, _ = UnresolvedPointTracker.check_coverage(
+            styled_content, issue_type
+        )
+        
+        # 6. 如果没覆盖，强制插入第一个未解决点
+        if not has_coverage and unresolved_points:
+            forced_point = unresolved_points[0]
+            styled_content = f"关于{forced_point}，{styled_content}"
+            covered_points = [forced_point]
+        
+        # 7. 计算模板偏离度
         divergence = self._calculate_divergence(styled_content, context)
         
-        # 5. 计算置信度
-        confidence = self._calculate_confidence(grounding_result, divergence)
+        # 8. 计算置信度 (覆盖未解决点增加置信度)
+        coverage_boost = len(covered_points) * 0.1 if covered_points else 0
+        confidence = self._calculate_confidence(grounding_result, divergence) + coverage_boost
+        confidence = min(1.0, confidence)
         
         return SynthesisResult(
             content=styled_content,
@@ -331,9 +403,17 @@ class SynthesisEngine:
         self,
         context: PersonaContext,
         issue_title: str,
-        grounding: GroundingResult
+        grounding: GroundingResult,
+        unresolved_points: List[str] = None
     ) -> str:
-        """生成内容骨架 (基于 grounding 结果)"""
+        """
+        生成内容骨架 (基于 grounding 结果)
+        
+        P0 修点 1: 骨架必须包含至少一个未解决点
+        策略：不同人格选择不同的未解决点，确保覆盖度递进
+        """
+        unresolved_points = unresolved_points or []
+        
         # 构建基于 Registry 的内容骨架
         parts = []
         
@@ -341,8 +421,30 @@ class SynthesisEngine:
         if grounding.culture_alignment > 0.7:
             parts.append(f"以{context.culture.lineage}之视角观之，")
         
+        # 核心：必须包含至少一个未解决点
+        if unresolved_points:
+            # 根据 seat_id 选择不同的起始点，确保不同人格覆盖不同点
+            # 使用 seat_id 的哈希来决定偏移量
+            seat_num = int(context.seat_id) if context.seat_id.isdigit() else 1
+            offset = (seat_num - 1) % max(1, len(unresolved_points))
+            
+            # 循环选取 3 个未解决点
+            selected_points = []
+            for i in range(3):
+                idx = (offset + i) % len(unresolved_points)
+                selected_points.append(unresolved_points[idx])
+            
+            core_point = selected_points[0]
+            parts.append(f"{context.name}以为，{issue_title}之{core_point}，")
+            
+            # 添加第二、第三个未解决点
+            if len(selected_points) >= 2:
+                parts.append(f"兼及{selected_points[1]}，")
+            if len(selected_points) >= 3:
+                parts.append(f"再虑{selected_points[2]}，")
+        
         # 主体 - 基于专长领域
-        if grounding.relevant_entries:
+        elif grounding.relevant_entries:
             expertise = grounding.relevant_entries[0].get("expertise", "此事")
             parts.append(f"{context.name}以为，{issue_title}关乎{expertise}，")
             

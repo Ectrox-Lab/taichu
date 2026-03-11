@@ -19,10 +19,16 @@ from typing import List, Dict, Tuple
 from dataclasses import dataclass, asdict
 from datetime import datetime
 
-from bridge_adaptor import BridgeAdaptor, get_adaptor, reset_adaptor
-from persona_context import ExtendedPersonaActivation
-from test_distinguishability import DistinguishabilityTester, DistinguishabilityResult
-from test_incrementality import IncrementalityTester, IncrementalityResult, MeetingSimulation
+try:
+    from .bridge_adaptor import BridgeAdaptor, get_adaptor, reset_adaptor
+    from .persona_context import ExtendedPersonaActivation
+    from .test_distinguishability import DistinguishabilityTester, DistinguishabilityResult
+    from .test_incrementality import IncrementalityTester, IncrementalityResult, MeetingSimulation
+except ImportError:
+    from bridge_adaptor import BridgeAdaptor, get_adaptor, reset_adaptor
+    from persona_context import ExtendedPersonaActivation
+    from test_distinguishability import DistinguishabilityTester, DistinguishabilityResult
+    from test_incrementality import IncrementalityTester, IncrementalityResult, MeetingSimulation
 
 
 @dataclass

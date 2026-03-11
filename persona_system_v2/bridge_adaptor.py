@@ -14,14 +14,24 @@ from typing import Dict, List, Optional, Any, Tuple
 from datetime import datetime
 
 # 导入 v2 核心组件
-from persona_context import (
-    PersonaContext, SpeechTurn, AuditTrail, CultureContext,
-    ExtendedPersonaActivation, MissingRegistryError, AuditVerificationError,
-    PersonaRole
-)
-from pipeline_implementation import (
-    GenerationPipeline, RegistryLoader, CultureRegistry
-)
+try:
+    from .persona_context import (
+        PersonaContext, SpeechTurn, AuditTrail, CultureContext,
+        ExtendedPersonaActivation, MissingRegistryError, AuditVerificationError,
+        PersonaRole
+    )
+    from .pipeline_implementation import (
+        GenerationPipeline, RegistryLoader, CultureRegistry
+    )
+except ImportError:
+    from persona_context import (
+        PersonaContext, SpeechTurn, AuditTrail, CultureContext,
+        ExtendedPersonaActivation, MissingRegistryError, AuditVerificationError,
+        PersonaRole
+    )
+    from pipeline_implementation import (
+        GenerationPipeline, RegistryLoader, CultureRegistry
+    )
 
 
 class BridgeAdaptor:

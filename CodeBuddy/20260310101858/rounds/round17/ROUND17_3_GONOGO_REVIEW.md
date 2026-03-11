@@ -109,6 +109,18 @@ Decision:        NO-GO (继续Shadow)
 
 ---
 
+## 落档状态 (Status Summary)
+
+```
+Round 17.3 Go/No-Go: Capability gate passes, safety gate fails; 
+remain in Shadow and execute source-targeted remediation on live_auto 
+before next validation run.
+```
+
+**约束**: 不再全局放松阈值。Alignment 已达标，问题收窄为特定 source 的 safety 误伤。全局降阈值易破坏已修复部分。
+
+---
+
 ## 附录: 原始数据路径
 
 - 观测数据: `data/shadow/SHADOW-R17-3-REAL_observations.jsonl`

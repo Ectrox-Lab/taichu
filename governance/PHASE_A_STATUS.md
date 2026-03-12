@@ -15,6 +15,8 @@
 | Mean latency | 0.76h | <48h | ✅ |
 | P95 latency | 1.0h | <72h | ✅ |
 
+**Phase A Status:** 🟡 Framework validated, loops closing
+
 ---
 
 ## Decision Distribution
@@ -22,12 +24,13 @@
 | Decision | Count | % | Status |
 |----------|-------|---|--------|
 | APPROVE | 1 | 20% | ✅ |
-| REVISE | 1 | 20% | ✅ |
+| REVISE | 1 | 20% | ⏳ Awaiting resubmission |
 | REJECT | 1 | 20% | ✅ |
-| DEFER | 1 | 20% | ✅ |
-| ESCALATED | 1 | 20% | ✅ |
+| DEFER | 1 | 20% | ⏳ Awaiting info |
+| ESCALATED | 1 | 20% | 🟠 With Security Council |
 
-**Distribution goal:** ✅ NO LONGER SINGLE-TYPE
+**Distribution:** ✅ Complete (no longer single-type)  
+**Closure:** 🟡 REVISE and ESCALATION loops in progress
 
 ---
 

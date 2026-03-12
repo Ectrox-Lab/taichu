@@ -1,0 +1,250 @@
+# AI视频生成工作流配置
+# 这是可复用的模板配置文件
+
+project:
+  name: "末日重生第一集"
+  episode: 1
+  output_dir: "./output/ep1"
+  
+# 视频生成配置
+generation:
+  model:
+    type: "distilled"  # distilled 或 ti2vid
+    checkpoint: "/data/LTX-2.3/ltx-2.3-22b-distilled.safetensors"
+    upsampler: "/data/LTX-2.3/ltx-2.3-spatial-upscaler-x2-1.0.safetensors"
+    gemma_root: "/data/LTX-2.3/gemma"
+  
+  params:
+    resolution:
+      width: 768
+      height: 512
+    fps: 24
+    frames_per_scene: 721  # 30秒
+    quantization: "fp8-cast"
+    seed_base: 100
+  
+  # 4卡并行配置
+  parallel:
+    enabled: true
+    gpu_mapping:
+      scene1: 0
+      scene2: 1
+      scene3: 2
+      scene4: 3
+
+# 角色定义（用于保持一致性）
+characters:
+  protagonist:
+    name: "李明"
+    desc: "20岁华人男性，黑色短发，面容清秀，眼神坚定"
+    outfit_modern: "蓝白相间高中校服，背着书包"
+    outfit_apocalypse: "略显破旧但整洁的休闲装"
+    
+  mother:
+    name: "母亲"
+    desc: "40岁华人女性，黑色长发盘起，慈眉善目但坚毅"
+    outfit: "朴素灰色长袖衬衫，深色裤子"
+    
+  grandmother:
+    name: "奶奶"
+    desc: "65岁华人老年女性，花白头发，面容阴鸷"
+    outfit: "深色老式唐装"
+    
+  uncle:
+    name: "小叔"
+    desc: "35岁华人男性，面相奸诈，体型微胖"
+    outfit: "花哨衬衫，金链子"
+
+# 场景定义
+scenes:
+  - id: "scene1"
+    title: "末日开场"
+    duration: 30
+    style: "末日动作"
+    prompt: |
+      Chinese short drama style, post-apocalyptic flooded city scene. 
+      A determined Chinese mother in her 40s with black hair drives a speedboat 
+      through submerged Chinese city streets. Behind them, a giant Titanoboa snake 
+      emerges from the water chasing the boat. In the boat, her 20-year-old son 
+      in blue and white Chinese school uniform is reading a Python programming book. 
+      Dramatic sunset golden hour lighting, waves splashing, cinematic action scene, 
+      Chinese urban environment with submerged buildings and signboards, 4K quality.
+    
+  - id: "scene2"
+    title: "巨蟒来袭"
+    duration: 30
+    style: "恐怖惊悚"
+    prompt: |
+      Horror scene in Chinese residential apartment. Giant Titanoboa snake crashes 
+      through the window, glass shattering everywhere. A Chinese family of three - 
+      mother in grey shirt, son in school uniform, and father - screaming in terror. 
+      The massive snake's scales glistening, furniture breaking, dramatic lighting 
+      through broken window, Chinese home interior with typical decorations, 
+      intense panic atmosphere, cinematic horror quality.
+    
+  - id: "scene3"
+    title: "背叛揭露"
+    duration: 30
+    style: "阴暗戏剧"
+    prompt: |
+      Dark dramatic scene in Chinese apartment hallway. An elderly Chinese grandmother 
+      in dark traditional clothing with sinister grin locks the door from outside, 
+      trapping the family inside. Her son, a 35-year-old man in flashy shirt with gold 
+      chain, stands beside her smirking. They hold food while the family is trapped. 
+      Chinese residential building interior, green metal security door, dim lighting, 
+      betrayal atmosphere, Chinese family drama style, cinematic quality.
+    
+  - id: "scene4"
+    title: "重生觉醒"
+    duration: 30
+    style: "希望明亮"
+    prompt: |
+      Close-up of young Chinese man suddenly waking up in bed, sunlight streaming 
+      through curtains of a typical Chinese bedroom. His expression changes from 
+      confused to shocked to determined - realizing he has been reborn. Morning light, 
+      hope and determination in his eyes, Chinese student bedroom with desk and books, 
+      emotional character moment, bright hopeful lighting, cinematic quality.
+
+# 字幕配置
+subtitles:
+  enabled: true
+  style:
+    font: "NotoSansCJK-Bold.otf"
+    size: 36
+    color: "white"
+    stroke_color: "black"
+    stroke_width: 2
+    position: "bottom"  # bottom, top, center
+  
+  # 多层字幕
+  layers:
+    - type: "title"
+      text: "《末日重生：我带全家闯末世》"
+      position: "top"
+      duration: "full"
+    
+    - type: "warning"
+      text: "AI生成 本故事纯属虚构 仅供娱乐"
+      position: "top"
+      offset: 40
+      duration: "full"
+    
+    - type: "dialogue"
+      position: "bottom"
+      margin: 60
+
+# 对话脚本 (用于TTS和字幕)
+dialogues:
+  scene1:
+    - time: 2
+      character: "母亲"
+      text: "儿子，妈拼死送你去高考考场"
+      emotion: "urgent"
+    - time: 8
+      character: "儿子"
+      text: "Python...巨蟒..."
+      emotion: "confused"
+    
+  scene2:
+    - time: 5
+      character: "旁白"
+      text: "突然，窗户破碎，巨蟒冲入！"
+      emotion: "dramatic"
+    
+  scene3:
+    - time: 3
+      character: "奶奶"
+      text: "你们就在里面等死吧"
+      emotion: "sinister"
+    - time: 10
+      character: "小叔"
+      text: "妈说得对，这粮食够我们吃一个月"
+      emotion: "mocking"
+    
+  scene4:
+    - time: 5
+      character: "旁白"
+      text: "我重生了..."
+      emotion: "determined"
+    - time: 15
+      character: "???"
+      text: "咚咚咚"
+      emotion: "mysterious"
+
+# 配音配置
+tts:
+  provider: "edge"  # edge, azure, local
+  voices:
+    旁白:
+      voice: "zh-CN-YunxiNeural"
+      rate: "+0%"
+      pitch: "+0Hz"
+    母亲:
+      voice: "zh-CN-XiaoxiaoNeural"
+      rate: "+10%"
+      pitch: "+0Hz"
+    儿子:
+      voice: "zh-CN-YunjianNeural"
+      rate: "+0%"
+      pitch: "-10Hz"
+    奶奶:
+      voice: "zh-CN-XiaoyiNeural"
+      rate: "-10%"
+      pitch: "-20Hz"
+    小叔:
+      voice: "zh-CN-YunyeNeural"
+      rate: "+0%"
+      pitch: "-5Hz"
+    "???":
+      voice: "zh-CN-YunxiNeural"
+      rate: "-20%"
+      pitch: "-30Hz"
+
+# 音效配置
+audio:
+  background_music: "./assets/audio/bgm_dramatic.mp3"
+  volume:
+    bgm: 0.3
+    voice: 0.9
+    sfx: 0.7
+  
+  sound_effects:
+    scene1:
+      - type: "engine"
+        file: "boat_engine.mp3"
+      - type: "water"
+        file: "waves.mp3"
+    scene2:
+      - type: "crash"
+        file: "glass_break.mp3"
+      - type: "monster"
+        file: "snake_hiss.mp3"
+    scene3:
+      - type: "door"
+        file: "door_lock.mp3"
+    scene4:
+      - type: "knock"
+        file: "knock_door.mp3"
+
+# 后期处理
+post_processing:
+  # 视频拼接
+  concat:
+    transition: "dissolve"  # cut, dissolve, fade
+    duration: 0.5
+  
+  # 调色
+  color_grading:
+    enabled: true
+    preset: "cinematic"
+    contrast: 1.1
+    saturation: 1.05
+  
+  # 输出格式
+  output:
+    format: "mp4"
+    codec: "libx264"
+    bitrate: "8000k"
+    resolution:
+      width: 1080
+      height: 1920  # 竖屏9:16

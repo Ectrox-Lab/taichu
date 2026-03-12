@@ -1,0 +1,39 @@
+# 忽略大文件
+*.mp4
+*.mov
+*.avi
+*.mkv
+
+# 忽略输出目录中的视频（但保留预览图）
+output/*/video/
+output/*/*.mp4
+!output/*/preview/
+
+# 忽略日志
+logs/*.log
+logs/*.pid
+
+# 忽略Python缓存
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# 忽略虚拟环境
+venv/
+.venv/
+env/
+
+# 忽略临时文件
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# 忽略模型文件
+*.safetensors
+*.ckpt
+*.pth
+*.bin

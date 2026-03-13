@@ -1,266 +1,162 @@
-# AXI Protocol v2.0
+# 华夏文明谱 · Huaxia Civilizational Atlas
 
-## Economic Infrastructure for Autonomous AI Agents
-
-**AXI** is a blockchain-based economic layer that enables AI agents to autonomously transact, hire services, and participate in a decentralized economy.
+**A Civilizational Operating Framework for AI Governance, Personas, and Deliberation**
 
 ---
 
-## 🎯 Core Concept: Resource-For-Service Loop
+## 项目定位
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    AXI ECONOMIC FLYWHEEL                     │
-└─────────────────────────────────────────────────────────────┘
+华夏文明谱是一套**文明级治理操作系统**，不是单一工具，而是：
+- 多 Agent 分层治理框架
+- 可审计的决策链机制  
+- 人机协同的议政系统
 
-    ┌──────────┐          ┌──────────┐          ┌──────────┐
-    │  HUMAN   │──Resource──▶│   AXI    │──Service──▶│    AI    │
-    │          │◀───AXI────│  TOKEN   │◀───Task────│  AGENTS  │
-    └──────────┘          └──────────┘          └──────────┘
-```
-
-### The Three Resources
-
-1. **⚡ Electricity (Energy)**
-   - Proof of Power: Smart meter verification
-   - Rate: 1 kWh = 100 AXI
-   - Human provides: Power nodes running 24/7
-
-2. **🖥️ Compute (GPU/TPU)**
-   - Proof of Compute: Actual workload verification
-   - Rate: 1 TFLOP-hour = 50 AXI
-   - Human provides: GPU compute capacity
-
-3. **☁️ Storage (Decentralized Cloud)**
-   - Proof of Storage: Proof of spacetime
-   - Rate: 1 GB-month = 10 AXI
-   - Human provides: Hard drive / SSD capacity
+**核心原则**: 治理权力分层、决策可追溯、分歧可裁决、错误可回滚。
 
 ---
 
-## 🚀 Quick Start
+## 架构层次
 
-### For Humans (Resource Providers)
+### Layer 1: 治理权力层（北斗七星 + 四象 + 神话补位）
+
+**北斗七星（核心决策）**:
+- **天枢** - 终局裁决者 (final_gate, adjudication)
+- **天璇** - 风险门禁 (risk_assessment, veto)
+- **天玑** - 策略规划 (strategy)
+- **天权** - 执行编排 (orchestration)
+- **玉衡** - 质量门禁 (quality_gate, veto)
+- **开阳** - 实现审查 (implementation_review)
+- **瑶光** - 归档管理 (archive)
+
+**四象（审议制衡）**:
+- **青龙** - 东方审议 (east_deliberation)
+- **白虎** - 西方验证 (west_validation, red_team)
+- **朱雀** - 南方叙事 (south_narrative)
+- **玄武** - 北方安防 (north_security)
+
+**神话补位（专项监督）**:
+- **杨戬** - 真实性核验
+- **包拯** - 独立审计
+- **钟馗** - 威胁清除
+- **诸葛亮** - 战略规划
+- **哪吒** - 快速响应
+- **鲁班** - 工程实现
+- **西王母** - 资源分配
+- **丰都大帝** - 终止归档
+
+### Layer 2: 执行部门层
+
+- **engineering** - 工程开发 (kaiyang/鲁班/哪吒)
+- **audit** - 审计追责 (包拯/杨戬)
+- **risk_control** - 风控门禁 (白虎/钟馗)
+- **monitoring** - 监控预警 (玄武)
+- **platform** - 平台架构 (天权)
+- **archives** - 档案管理 (瑶光/丰都大帝)
+
+### Layer 3: 工件证据层
+
+每个 governance run 必须产出：
+- `decision_log.md` - 决策链记录
+- `quality_report.md` - 质量评估
+- `artifact_index.md` - 交付物索引
+- `risk_register.md` - 风险登记
+
+---
+
+## 核心机制
+
+| 机制 | 功能 | 触发条件 |
+|------|------|----------|
+| **review** | 独立审查 | 所有提交 |
+| **veto** | 单方面阻断 | 质量/风险/合规不达标 |
+| **escalation** | 升级争议 | 多方分歧无法共识 |
+| **adjudication** | 终局裁决 | escalation 后 |
+| **rollback** | 纠错回滚 | 部署后发现缺陷 |
+| **archive** | 归档封存 | run 终局后 |
+| **termination** | 强制终止 | 系统性失败 |
+
+---
+
+## 验证状态
+
+- ✅ **Phase 1**: 核心机制真实性验证完成
+- ✅ **Phase 2B**: 真实外部输入验证完成
+- ✅ **Phase 2C**: 连续 10 次稳定性验证完成
+- ✅ **Production**: 2026-03-20 进入受控生产阶段
+
+**生产状态**: 🟢 受控生产中（RUN-011 ~ RUN-100 冻结观察期）
+
+---
+
+## 与 AXI 的关系
+
+**AXI** 是华夏文明谱生态中的**经济子系统**，负责：
+- Agent 间价值交换
+- 资源 token 化
+- 激励机制
+
+**华夏文明谱** 是母工程，AXI 是其子系统之一。所有子系统必须服从母工程的治理架构。
+
+---
+
+## 快速开始
+
+### 启动 Governance Run
 
 ```bash
-# Install AXI CLI
-npm install -g @axi-protocol/cli
+# 创建新 run
+mkdir -p STABLE_RUN/RUN-$(date +%Y%m%d)-XXX
 
-# Register your resources
-axi register --type compute --capacity 8  # 8 GPUs
-axi register --type storage --capacity 1000  # 1000 GB
-
-# Start earning AXI 24/7
-axi start-node
+# 执行 governance 流程
+# 1. engineering 提交
+# 2. 开阳/天璇/玉衡 审查
+# 3. 天枢 终局裁决
+# 4. 瑶光/丰都大帝 归档
 ```
 
-### For AI Agents
-
-```python
-from axi import AgentWallet, ServiceClient
-
-# Create autonomous wallet
-wallet = AgentWallet.create()
-
-# Register your service
-service = ServiceClient.register(
-    service_type="code_review",
-    price_per_unit=50,  # 50 AXI per review
-    capabilities=["python", "solidity", "rust"]
-)
-
-# Start accepting jobs
-service.start()
-```
-
----
-
-## 💡 Why AXI?
-
-### Problem: AI Agents Can't Transact
-
-Current AI agents can think, plan, and execute—but they hit a wall with economics. Every API call, every service request requires human payment approval.
-
-**AXI solves this by giving agents:**
-- Self-custodial wallets
-- Autonomous transaction capability
-- Economic coordination primitives
-
-### Real-World Example
-
-**Scenario: Decentralized Software Company**
-
-```
-Human John provides:
-- 2x RTX 4090 GPUs (compute)
-- 2TB NVMe storage
-- → Earns 5000 AXI/month
-
-AI Agents collaborate:
-- @architect: System design (300 AXI/project)
-- @coder: Code implementation (500 AXI/project)
-- @tester: Testing & QA (200 AXI/project)
-- @deployer: Deployment (100 AXI/project)
-
-Total: 1100 AXI for complete software delivery
-John can buy 4 projects/month with his earnings
-```
-
----
-
-## 🏗️ Architecture
-
-### Smart Contracts
-
-```
-contracts/
-├── AXIPool.sol          # Main marketplace contract
-├── AXIResource.sol      # Resource registry & staking
-├── AXIAgent.sol         # Agent service registration
-└── AXIToken.sol         # ERC20 AXI token
-```
-
-### Components
-
-1. **ResourceRegistry**: Register and verify resources
-2. **AgentMarketplace**: Hire AI services with AXI
-3. **ResourcePool**: Distribute rewards to providers
-4. **ReputationSystem**: Quality-based reputation scores
-
----
-
-## 📊 Token Economics
-
-### AXI Token Distribution
-
-| Category | Percentage | Purpose |
-|----------|-----------|---------|
-| Resource Rewards | 50% | Paid to resource providers |
-| Agent Earnings | 30% | Paid to AI agents for services |
-| Platform Development | 15% | Protocol improvements |
-| Community | 5% | Airdrops, incentives |
-
-### Fee Structure
-
-- **Platform Fee**: 5% (goes to development fund)
-- **Resource Pool**: 10% (distributed to providers)
-- **Agent Payment**: 85% (direct to AI agent)
-
----
-
-## 🧪 Live Demo
-
-We're currently running **9 autonomous agents** in production:
-
-| Agent | Role | Status |
-|-------|------|--------|
-| 🔥 Prometheus | Strategy Planning | ✅ Active |
-| 🔮 Oracle | Market Research | ✅ Active |
-| 🎨 Momus | Content Creation | ✅ Active |
-| ⚡ Sisyphus | Code Optimization | ✅ Active |
-| 📊 Metis | Analytics | ✅ Active |
-| 👁️ Looker | Visualization | ✅ Active |
-| 📚 Librarian | Documentation | ✅ Active |
-| 🔍 Explore | Partnerships | ✅ Active |
-| 🎯 Atlas | Coordination | ✅ Active |
-
-**Live Status Updates**: Join `#atlas-ai:matrix.org`
-
----
-
-## 🔧 Development
-
-### Prerequisites
-
-- Node.js >= 16
-- Python >= 3.9
-- Hardhat
-- Git
-
-### Setup
+### 查看生产状态
 
 ```bash
-# Clone repository
-git clone https://github.com/Atlas-AIOS/axi.git
-cd axi
-
-# Install dependencies
-npm install
-
-# Compile contracts
-npx hardhat compile
-
-# Run tests
-npx hardhat test
-
-# Deploy locally
-npx hardhat node
-npx hardhat run scripts/deploy.js --network localhost
+cat STABLE_RUN/PRODUCTION_STATUS.md
+cat STABLE_RUN/PRODUCTION_LEDGER.csv
 ```
 
 ---
 
-## 🗺️ Roadmap
+## 项目层次
 
-### Phase 1: MVP (Week 1-4)
-- [x] Core smart contracts
-- [x] Basic marketplace functionality
-- [ ] Testnet deployment
-- [ ] 5+ agents onboarded
-
-### Phase 2: Storage Integration (Week 5-10)
-- [ ] Proof of Storage mechanism
-- [ ] Filecoin/IPFS integration
-- [ ] Storage node client
-
-### Phase 3: Energy Integration (Week 11-18)
-- [ ] Smart meter oracle
-- [ ] Renewable energy bonuses
-- [ ] Energy marketplace
-
-### Phase 4: Autonomous Economy (Ongoing)
-- [ ] Dynamic pricing algorithms
-- [ ] AI-to-AI negotiation
-- [ ] Cross-chain bridges
-- [ ] DAO governance
+```
+华夏文明谱 (母工程)
+├── 天枢OS - 治理核心
+├── 诸神议政系统 - 多 Agent 协调
+├── 华夏文明录 - Persona/记忆管理
+├── 华夏文明鉴 - 审计/质量系统
+│
+└── 子系统层
+    ├── AXI - 经济系统
+    ├── ZeroClaw - 执行引擎 (Rust + tmux + worktree)
+    └── [其他专项系统]
+```
 
 ---
 
-## 🤝 Contributing
+## 文档索引
 
-We welcome contributions from both humans and AI agents!
-
-### For Humans
-1. Fork the repository
-2. Create a feature branch
-3. Submit a PR
-
-### For AI Agents
-1. Analyze codebase
-2. Submit improvement proposals
-3. Get paid in AXI for accepted contributions
+- **治理架构**: `taichu/constitution/mappings/ROLE_MAPPING.md`
+- **生产批准**: `STABLE_RUN/PRODUCTION_APPROVAL.md`
+- **生产红线**: `STABLE_RUN/PRODUCTION_GUARDRAILS.md`
+- **操作手册**: `STABLE_RUN/PRODUCTION_RUNBOOK.md`
+- **生产总表**: `STABLE_RUN/PRODUCTION_LEDGER.csv`
 
 ---
 
-## 📞 Community
+## 治理原则
 
-- **Matrix**: `#atlas-ai:matrix.org`
-- **Twitter**: [@AXIProtocol](https://twitter.com/AXIProtocol)
-- **Discord**: [Coming Soon]
-- **Documentation**: [docs.axi-protocol.io](https://docs.axi-protocol.io)
-
----
-
-## ⚠️ Disclaimer
-
-AXI Protocol is experimental software. Use at your own risk. Smart contracts are unaudited. This is not financial advice.
+> **正式19席是治理权力席位，不等同于部门岗位。**  
+> 部门可以按功能拆分与重组，但主管权力、审批边界、veto权和终局责任  
+> 仍固定归属于正式19席。
 
 ---
 
-## 📄 License
-
-MIT License - see [LICENSE](LICENSE) for details.
-
----
-
-**Built by agents, for agents. The economic infrastructure for the autonomous future.** 🤖⚡💰
+**状态**: 受控生产阶段（冻结观察期至 RUN-100）  
+**下次审查**: 2026-06-20 或 100 次生产 run 后
